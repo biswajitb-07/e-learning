@@ -121,7 +121,7 @@ const CourseTab = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
+    <div className="w-full md:max-w-4xl mx-auto md:p-6 p-1 pb-5 md:pb-0 bg-white shadow-md rounded-lg">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
         <div>
           <h2 className="text-xl font-semibold">Basic Course Information</h2>
