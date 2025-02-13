@@ -47,7 +47,7 @@ const Sidebar = () => {
           {!isMobileMenuOpen && (
             <MdMenu
               size={26}
-              className="text-white hover:text-green-600 cursor-pointer"
+              className="text-black hover:text-green-600 cursor-pointer"
             />
           )}
         </button>
