@@ -42,8 +42,8 @@ const Sidebar = () => {
       </div>
 
       {/* Mobile Menu Button */}
-      <div className="md:hidden h-screen w-12 bg-[#212832] sticky top-0 flex flex-col items-center">
-        <button onClick={toggleMobileMenu} className="mt-20">
+      <div className="md:hidden h-screen w-0 sticky top-0 flex flex-col ml-4">
+        <button onClick={toggleMobileMenu} className="mt-16">
           {!isMobileMenuOpen && (
             <MdMenu
               size={26}
