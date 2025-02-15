@@ -14,9 +14,6 @@ import Loader from "../../components/UI/Loader";
 const Dashboard = () => {
   const { data, isSuccess, isError, isLoading } = useGetPurchasedCoursesQuery();
 
-  console.log(data);
-  
-
   if (isLoading)
     return (
       <div className="h-screen w-full grid place-items-center">
@@ -26,21 +23,18 @@ const Dashboard = () => {
   if (isLoading)
     return <h1 className="text-red-500">Failed to get purchased course</h1>;
 
-  const { purchasedCourses } = data || [];
+  const { salesCourse } = data || [];
 
-  console.log(purchasedCourses);
-  
-
-  const courseData = purchasedCourses.map((course) => ({
+  const courseData = salesCourse?.map((course) => ({
     name: course.courseId.courseTitle,
     price: course.courseId.coursePrice,
   }));
 
-  const totalRevenue = purchasedCourses.reduce(
+  const totalRevenue = salesCourse?.reduce(
     (acc, element) => acc + (element.amount || 0),
     0
   );
-  const totalSales = purchasedCourses.length;
+  const totalSales = salesCourse?.length;
 
   return (
     <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-16">

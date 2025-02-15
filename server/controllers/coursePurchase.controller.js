@@ -18,7 +18,7 @@ export const createCheckoutSession = async (req, res) => {
     const course = await Course.findById(courseId);
     if (!course) return res.status(404).json({ message: "Course not found!" });
 
-    const amount = course.coursePrice*100;
+    const amount = course.coursePrice * 100;
 
     // Create a new order in Razorpay
     const options = {
@@ -71,7 +71,7 @@ export const confirmPayment = async (req, res) => {
     const newPurchase = new CoursePurchase({
       courseId,
       userId,
-      amount: req.body.amount/100,
+      amount: req.body.amount / 100,
       status: "completed",
       paymentId,
     });
@@ -130,17 +130,36 @@ export const getCourseDetailWithPurchaseStatus = async (req, res) => {
 
 export const getAllPurchasedCourse = async (req, res) => {
   try {
-    const purchasedCourses = await CoursePurchase.find({
-      status: "completed",
-    }).populate("courseId");
+    const userId = req.id;
 
-    if (!purchasedCourses) {
+    const userCreateCourse = await Course.find({
+      creator: userId,
+    });
+
+    if (userCreateCourse.length === 0) {
       return res.status(404).json({
-        purchasedCourse: [],
+        userCreateCourse: [],
+        message: "Instructor has not create course yet",
       });
     }
 
-    return res.status(200).json({ purchasedCourses });
+    const courseIds = userCreateCourse.map(
+      (course) => new mongoose.Types.ObjectId(course._id)
+    );
+
+    const salesCourse = await CoursePurchase.find({
+      courseId: { $in: courseIds },
+      status: "completed",
+    }).populate("courseId");
+
+    if (!salesCourse || salesCourse.length === 0) {
+      return res.status(404).json({
+        salesCourse: [],
+        message: "No purchased courses found",
+      });
+    }
+
+    return res.status(200).json({ salesCourse });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
