@@ -40,12 +40,12 @@ const Dashboard = () => {
     <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-16">
       <div className="shadow-lg hover:shadow-xl transition-shadow duration-300 p-5 bg-white rounded-lg">
         <h2 className="text-lg font-semibold">Total Sales</h2>
-        <p className="text-3xl font-bold text-blue-600">{totalSales}</p>
+        <p className="text-3xl font-bold text-blue-600">{totalSales || 0}</p>
       </div>
 
       <div className="shadow-lg hover:shadow-xl transition-shadow duration-300 p-5 bg-white rounded-lg">
         <h2 className="text-lg font-semibold">Total Revenue</h2>
-        <p className="text-3xl font-bold text-blue-600">{totalRevenue}</p>
+        <p className="text-3xl font-bold text-blue-600">{totalRevenue || 0}</p>
       </div>
 
       {/* Course Prices Card */}
