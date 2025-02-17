@@ -1,5 +1,8 @@
 import express from "express";
 import {
+  adminRequest,
+  deleteRequest,
+  getRequest,
   getUserProfile,
   login,
   logout,
@@ -22,5 +25,10 @@ userRouter
   .put(isAuthenticated, upload.single("profilePhoto"), updateProfile);
 userRouter.post("/send-reset-otp", sendResetOtp);
 userRouter.post("/reset-password", resetPassword);
+userRouter.route("/get-request").get(isAuthenticated, getRequest);
+userRouter
+  .route("/admin-request")
+  .post(isAuthenticated, upload.single("resume"), adminRequest);
+userRouter.route("/admin-request").delete(isAuthenticated, deleteRequest);
 
 export default userRouter;

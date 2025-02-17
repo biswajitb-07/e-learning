@@ -25,6 +25,7 @@ import {
 } from "./components/UI/ProtectedRoutes";
 import PurchaseCourseProtectedRoute from "./components/UI/PurchaseCourseProtectedRoute";
 import ResetPassword from "./pages/student/ResetPassword";
+import AdminRequest from "./pages/student/AdminRequest";
 
 const appRouter = createBrowserRouter([
   {
@@ -77,6 +78,14 @@ const appRouter = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <CourseDetail />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "admin-request",
+        element: (
+          <ProtectedRoute>
+            <AdminRequest />
           </ProtectedRoute>
         ),
       },

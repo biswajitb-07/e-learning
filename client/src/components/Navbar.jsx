@@ -139,6 +139,19 @@ const Navbar = () => {
                         Log out
                       </li>
                     </ul>
+                    {user.role === "student" && (
+                      <div className="border-t border-gray-200">
+                        <button
+                          onClick={() => {
+                            toggleDropdown();
+                            navigate("/admin-request");
+                          }}
+                          className="w-full px-4 py-2 text-center bg-[#309255] text-white rounded-b-lg hover:opacity-80 cursor-pointer"
+                        >
+                          Admin Request
+                        </button>
+                      </div>
+                    )}
                     {user.role === "instructor" && (
                       <div className="border-t border-gray-200">
                         <button
@@ -227,6 +240,17 @@ const Navbar = () => {
                 <FaSignOutAlt />
                 Log out
               </li>
+              {user.role === "student" && (
+                <button
+                  onClick={() => {
+                    toggleMobileMenu();
+                    navigate("/admin-request");
+                  }}
+                  className="w-full px-4 py-2 text-center bg-[#309255] text-white rounded-lg hover:opacity-80 cursor-pointer"
+                >
+                  Admin request
+                </button>
+              )}
               {user.role === "instructor" && (
                 <button
                   onClick={() => {

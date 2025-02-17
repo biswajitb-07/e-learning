@@ -5,6 +5,7 @@ const USER_API = "https://e-learning-sryx.onrender.com/api/v1/user/";
 
 export const authApi = createApi({
   reducerPath: "authApi",
+  tagTypes: ["Refetch_Request"],
   baseQuery: fetchBaseQuery({
     baseUrl: USER_API,
     credentials: "include",
@@ -82,6 +83,28 @@ export const authApi = createApi({
         body: passwordData,
       }),
     }),
+    getRequest: builder.query({
+      query: () => ({
+        url: "get-request",
+        method: "GET",
+      }),
+      providesTags: ["Refetch_Request"],
+    }),
+    adminRequest: builder.mutation({
+      query: (formData) => ({
+        url: "admin-request",
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: ["Refetch_Request"],
+    }),
+    deleteAdminRequest: builder.mutation({
+      query: () => ({
+        url: "admin-request",
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Refetch_Request"],
+    }),
   }),
 });
 
@@ -93,4 +116,7 @@ export const {
   useUpdateUserMutation,
   useSendResetOtpMutation,
   useResetPasswordMutation,
+  useGetRequestQuery,
+  useAdminRequestMutation,
+  useDeleteAdminRequestMutation,
 } = authApi;
