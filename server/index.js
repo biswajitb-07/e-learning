@@ -17,6 +17,7 @@ const _dirname = path.resolve();
 connectDB();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 const allowedOrigins = [process.env.FRONTEND_URL];
