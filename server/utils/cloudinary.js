@@ -52,7 +52,7 @@ export const uploadMedia = async (file) => {
       uploadOptions
     );
 
-    // fs.unlinkSync(file.path);
+    fs.unlinkSync(file.path);
 
     return uploadResponse;
   } catch (error) {
