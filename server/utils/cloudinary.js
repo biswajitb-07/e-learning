@@ -49,12 +49,6 @@ export const uploadMedia = async (file) => {
       };
     }
 
-    // Check file size before uploading
-    if (file.size > maxFileSize) {
-      throw new Error(
-        `File size exceeds the ${maxFileSize / (1024 * 1024)}MB limit.`
-      );
-    }
 
     // Upload to Cloudinary
     const uploadResponse = await cloudinary.uploader.upload(
