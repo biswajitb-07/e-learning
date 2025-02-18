@@ -11,52 +11,63 @@ cloudinary.config({
 
 export const uploadMedia = async (file) => {
   try {
-    if (!file || !file.path || !file.mimetype) {
-      throw new Error("Invalid file input: filePath or mimetype is missing.");
+    if (!file || !file.path || !file.mimetype || !file.size) {
+      throw new Error(
+        "Invalid file input: Missing file path, mimetype, or size."
+      );
     }
 
     const isImage = file.mimetype.startsWith("image/");
     const isPDF = file.mimetype === "application/pdf";
 
-    let folder, uploadOptions;
+    let folder, uploadOptions, maxFileSize;
 
     if (isImage) {
       folder = "e-learning/image";
+      maxFileSize = 10 * 1024 * 1024; // 10MB limit
       uploadOptions = {
         resource_type: "image",
         folder: folder,
-        limits: { fileSize: 10 * 1024 * 1024 },
       };
     } else if (isPDF) {
       folder = "e-learning/pdf";
+      maxFileSize = 10 * 1024 * 1024; // 10MB limit
       uploadOptions = {
         resource_type: "raw",
-        folder: "e-learning/pdf",
+        folder: folder,
         format: "pdf",
         use_filename: true,
         unique_filename: false,
-        limits: { fileSize: 10 * 1024 * 1024 },
       };
     } else {
       folder = "e-learning/video";
+      maxFileSize = 100 * 1024 * 1024; // 100MB limit
       uploadOptions = {
         resource_type: "video",
         folder: folder,
         chunk_size: 6 * 1024 * 1024,
-        limits: { fileSize: 100 * 1024 * 1024 },
       };
     }
 
+    // Check file size before uploading
+    if (file.size > maxFileSize) {
+      throw new Error(
+        `File size exceeds the ${maxFileSize / (1024 * 1024)}MB limit.`
+      );
+    }
+
+    // Upload to Cloudinary
     const uploadResponse = await cloudinary.uploader.upload(
       file.path,
       uploadOptions
     );
 
+    // Remove file from local storage after successful upload
     fs.unlinkSync(file.path);
 
     return uploadResponse;
   } catch (error) {
-    console.error("Upload Error:", error);
+    console.error("Upload Error:", error.message);
     throw error;
   }
 };
