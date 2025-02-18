@@ -90,7 +90,7 @@ const AdminRequest = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-green-50 px-4">
-      <div className="bg-white shadow-lg rounded-lg p-6 md:p-10 w-full max-w-lg">
+      <div className="bg-white shadow-lg rounded-2xl p-6 md:p-10 w-full max-w-lg">
         <h2 className="text-2xl md:text-3xl font-semibold text-green-700 text-center">
           Admin Request
         </h2>
@@ -154,7 +154,17 @@ const AdminRequest = () => {
                       Download Resume
                     </a>
                   </td>
-                  <td className="px-6 py-4 text-gray-800">
+                  <td
+                    className={`px-6 py-2 text-white rounded-md cursor-pointer ${
+                      data?.userRequest?.status === "pending"
+                        ? "bg-yellow-500 hover:bg-yellow-600"
+                        : data?.userRequest?.status === "accepted"
+                        ? "bg-blue-500 hover:bg-blue-600"
+                        : data?.userRequest?.status === "successful"
+                        ? "bg-green-500 hover:bg-green-600"
+                        : "bg-red-500 hover:bg-red-600"
+                    }`}
+                  >
                     {data?.userRequest?.status || "N/A"}
                   </td>
                 </tr>
