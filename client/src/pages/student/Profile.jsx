@@ -50,7 +50,7 @@ const Profile = () => {
       setIsEditing(false);
     }
     if (isError) {
-      toast.error(error.message || "Failed to update profile");
+      toast.error(error.data.message || "Failed to update profile");
     }
   }, [error, isSuccess, updateUser, isError]);
 
