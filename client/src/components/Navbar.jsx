@@ -152,6 +152,19 @@ const Navbar = () => {
                         </button>
                       </div>
                     )}
+                    {user.role === "company" && (
+                      <div className="border-t border-gray-200">
+                        <button
+                          onClick={() => {
+                            toggleDropdown();
+                            navigate("/company");
+                          }}
+                          className="w-full px-4 py-2 text-center bg-[#309255] text-white rounded-b-lg hover:opacity-80 cursor-pointer"
+                        >
+                          Company
+                        </button>
+                      </div>
+                    )}
                     {user.role === "instructor" && (
                       <div className="border-t border-gray-200">
                         <button
@@ -249,6 +262,17 @@ const Navbar = () => {
                   className="w-full px-4 py-2 text-center bg-[#309255] text-white rounded-lg hover:opacity-80 cursor-pointer"
                 >
                   Admin request
+                </button>
+              )}
+              {user.role === "company" && (
+                <button
+                  onClick={() => {
+                    toggleMobileMenu();
+                    navigate("/company");
+                  }}
+                  className="w-full px-4 py-2 text-center bg-[#309255] text-white rounded-lg hover:opacity-80 cursor-pointer"
+                >
+                  Company
                 </button>
               )}
               {user.role === "instructor" && (

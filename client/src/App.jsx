@@ -26,6 +26,10 @@ import {
 import PurchaseCourseProtectedRoute from "./components/UI/PurchaseCourseProtectedRoute";
 import ResetPassword from "./pages/student/ResetPassword";
 import AdminRequest from "./pages/student/AdminRequest";
+import CompanySidebar from "./pages/company/CompanySidebar";
+import GetAllUsers from "./pages/company/getAllUsers";
+import GetAllInstructors from "./pages/company/GetAllInstructors";
+import InstructorCourses from "./pages/company/InstructorCourses";
 
 const appRouter = createBrowserRouter([
   {
@@ -135,6 +139,29 @@ const appRouter = createBrowserRouter([
           {
             path: "course/:courseId/lecture/:lectureId",
             element: <EditLecture />,
+          },
+        ],
+      },
+      // company routes
+      {
+        path: "company",
+        element: (
+          <>
+            <CompanySidebar />
+          </>
+        ),
+        children: [
+          {
+            path: "users",
+            element: <GetAllUsers />,
+          },
+          {
+            path: "instructors",
+            element: <GetAllInstructors />,
+          },
+          {
+            path: "instructor/:instructorId/courses",
+            element: <InstructorCourses />,
           },
         ],
       },

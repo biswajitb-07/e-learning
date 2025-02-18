@@ -33,6 +33,7 @@ app.use("/api/v1/user", userRouter);
 app.use("/api/v1/course", courseRouter);
 app.use("/api/v1/purchase", purchaseRouter);
 app.use("/api/v1/progress", progressRouter);
+app.use("/api/v1/company", companyRouter);
 
 app.use(express.static(path.join(_dirname, "/client/dist")));
 app.get("*", (_, res) => {
