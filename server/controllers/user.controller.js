@@ -158,7 +158,13 @@ export const updateProfile = async (req, res) => {
         await deleteMediaFromCloudinary(`e-learning/image/${publicId}`);
       }
 
-      // Upload the new profile photo
+      if (req.file.size > 10 * 1024 * 1024) {
+        return res.status(400).json({
+          success: false,
+          message: "File size exceeds the 10MB limit.",
+        });
+      }
+
       const cloudResponse = await uploadMedia(req.file);
       if (!cloudResponse || !cloudResponse.secure_url) {
         return res.status(500).json({
