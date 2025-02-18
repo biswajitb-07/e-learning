@@ -8,6 +8,7 @@ import courseRouter from "./routes/course.route.js";
 import uploadRouter from "./routes/media.route.js";
 import purchaseRouter from "./routes/purchaseCourse.route.js";
 import progressRouter from "./routes/courseProgress.route.js";
+import companyRouter from './routes/company.route.js'
 import path from "path";
 
 const app = express();
