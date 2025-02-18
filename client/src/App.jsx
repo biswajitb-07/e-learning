@@ -27,7 +27,7 @@ import PurchaseCourseProtectedRoute from "./components/UI/PurchaseCourseProtecte
 import ResetPassword from "./pages/student/ResetPassword";
 import AdminRequest from "./pages/student/AdminRequest";
 import CompanySidebar from "./pages/company/CompanySidebar";
-import GetAllUsers from "./pages/company/getAllUsers";
+import GetAllUsers from "./pages/company/GetAllUsers";
 import GetAllInstructors from "./pages/company/GetAllInstructors";
 import InstructorCourses from "./pages/company/InstructorCourses";
 
