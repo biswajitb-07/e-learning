@@ -3,6 +3,7 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import { MdClose, MdMenu } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa6";
 import { FaChalkboardTeacher } from "react-icons/fa";
+import { VscGitPullRequestGoToChanges } from "react-icons/vsc";
 
 const CompanySidebar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -16,10 +17,8 @@ const CompanySidebar = () => {
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar for Large Devices */}
       <div className="hidden md:block w-[250px] space-y-8 border-r border-gray-300 p-5 sticky top-0 h-screen bg-[#212832]">
         <div className="mt-20 space-y-4">
-          {/* Dashboard Link */}
           <Link
             to="users"
             className={`flex items-center gap-2 text-gray-700 hover:text-green-500 ${
@@ -29,7 +28,6 @@ const CompanySidebar = () => {
             <FaRegUser size={19} className="text-current" />
             <h1 className="text-lg font-medium">Users</h1>
           </Link>
-          {/* Courses Link */}
           <Link
             to="instructors"
             className={`flex items-center gap-2 text-gray-700 hover:text-green-500 ${
@@ -38,6 +36,17 @@ const CompanySidebar = () => {
           >
             <FaChalkboardTeacher size={19} className="text-current" />
             <h1 className="text-lg font-medium">Instructors</h1>
+          </Link>
+          <Link
+            to="admin-request"
+            className={`flex items-center gap-2 text-gray-700 hover:text-green-500 ${
+              isActive("/company/admin-request")
+                ? "text-green-500"
+                : "text-white"
+            }`}
+          >
+            <VscGitPullRequestGoToChanges size={19} className="text-current" />
+            <h1 className="text-lg font-medium">Admin request</h1>
           </Link>
         </div>
       </div>
@@ -70,7 +79,6 @@ const CompanySidebar = () => {
         </div>
 
         <div className="space-y-4 flex flex-col px-5 mt-5">
-          {/* Dashboard Link */}
           <Link
             onClick={toggleMobileMenu}
             to="users"
@@ -81,7 +89,6 @@ const CompanySidebar = () => {
             <FaRegUser size={19} className="text-current" />
             <h1 className="text-lg font-medium">Users</h1>
           </Link>
-          {/* Courses Link */}
           <Link
             onClick={toggleMobileMenu}
             to="instructors"
@@ -91,6 +98,18 @@ const CompanySidebar = () => {
           >
             <FaChalkboardTeacher size={19} className="text-current" />
             <h1 className="text-lg font-medium">Instructors</h1>
+          </Link>
+          <Link
+            onClick={toggleMobileMenu}
+            to="admin-request"
+            className={`flex items-center gap-2 text-gray-700 hover:text-green-500 ${
+              isActive("/company/admin-request")
+                ? "text-green-500"
+                : "text-white"
+            }`}
+          >
+            <VscGitPullRequestGoToChanges size={19} className="text-current" />
+            <h1 className="text-lg font-medium">Admin request</h1>
           </Link>
         </div>
       </div>

@@ -27,6 +27,26 @@ export const companyApi = createApi({
         method: "GET",
       }),
     }),
+    getAllAdminRequest: builder.query({
+      query: () => ({
+        url: "/request",
+        method: "GET",
+      }),
+    }),
+    updateAdminRequest: builder.mutation({
+      query: ({ userId, status, userRole }) => ({
+        url: "/update-request",
+        method: "PUT",
+        body: { userId, status, userRole },
+      }),
+    }),
+    deleteAdminRequest: builder.mutation({
+      query: (id) => ({
+        url: "/delete-request",
+        method: "DELETE",
+        body: { id },
+      }),
+    }),
   }),
 });
 
@@ -34,4 +54,7 @@ export const {
   useGetAllUsersQuery,
   useGetAllInstructorQuery,
   useGetInstructorCoursesQuery,
+  useGetAllAdminRequestQuery,
+  useUpdateAdminRequestMutation,
+  useDeleteAdminRequestMutation,
 } = companyApi;
