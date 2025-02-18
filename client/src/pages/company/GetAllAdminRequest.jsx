@@ -15,14 +15,19 @@ const GetAllAdminRequest = () => {
   const [editingRequest, setEditingRequest] = useState(null);
   const [newStatus, setNewStatus] = useState("");
   const [userRole, setUserRole] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
+  const [updatingId, setUpdatingId] = useState(null);
 
   const deleteRequest = async (id) => {
+    setDeletingId(id);
     try {
       await deleteAdminRequest(id).unwrap();
       toast.success("Request deleted successfully");
       refetch();
     } catch (error) {
       toast.error("Failed to delete request");
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -31,6 +36,8 @@ const GetAllAdminRequest = () => {
       toast.error("Please select a status");
       return;
     }
+    setUpdatingId(id);
+
     try {
       await updateAdminRequest({
         userId: id,
@@ -43,9 +50,9 @@ const GetAllAdminRequest = () => {
       setUserRole("");
       refetch();
     } catch (error) {
-      console.log(error);
-
       toast.error("Failed to update request");
+    } finally {
+      setUpdatingId(null);
     }
   };
 
@@ -108,13 +115,13 @@ const GetAllAdminRequest = () => {
                       </div>
                       <button
                         onClick={() => updateRequest(req.userId?._id)}
-                        className="bg-green-600 text-white px-3 py-1 rounded ml-2"
+                        className="bg-green-600 text-white px-3 py-1 rounded ml-2 cursor-pointer"
                       >
-                        Save
+                        {updatingId === req.userId?._id ? <Loader /> : "save"}
                       </button>
                       <button
                         onClick={() => setEditingRequest(null)}
-                        className="bg-gray-500 text-white px-3 py-1 rounded ml-2"
+                        className="bg-gray-500 text-white px-3 py-1 rounded ml-2 cursor-pointer"
                       >
                         Cancel
                       </button>
@@ -147,7 +154,11 @@ const GetAllAdminRequest = () => {
                     onClick={() => deleteRequest(req._id)}
                     className="text-red-600 hover:text-red-800 cursor-pointer flex-1 text-right"
                   >
-                    <MdDeleteForever size={20} />
+                    {deletingId === req._id ? (
+                      <Loader />
+                    ) : (
+                      <MdDeleteForever size={20} />
+                    )}
                   </button>
                 </div>
               </li>
