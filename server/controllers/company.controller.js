@@ -4,7 +4,6 @@ import { AdminRequest } from "../models/userAdminRequest.model.js";
 import { CoursePurchase } from "../models/coursePurchase.model.js";
 import { CourseProgress } from "../models/courseProgress.model.js";
 import { Lecture } from "../models/lecture.model.js";
-import mongoose from "mongoose";
 import {
   deleteMediaFromCloudinary,
   deletePdfFromCloudinary,
@@ -22,6 +21,7 @@ export const getAllUsers = async (req, res) => {
 
     res.status(200).json({ success: true, users });
   } catch (error) {
+    console.error("Error fetching users:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -29,8 +29,12 @@ export const getAllUsers = async (req, res) => {
 export const deleteUser = async (req, res) => {
   try {
     const { userId } = req.body;
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User ID is required" });
+    }
 
-    // Ensure the user exists before proceeding
     const user = await User.findById(userId);
     if (!user) {
       return res
@@ -40,37 +44,36 @@ export const deleteUser = async (req, res) => {
 
     const deleteRequest = await AdminRequest.findOne({ userId });
 
-    if (deleteRequest.publicId) {
+    if (deleteRequest?.publicId) {
       await deletePdfFromCloudinary(deleteRequest.publicId);
     }
 
-    await AdminRequest.deleteOne({ userId });
-    await CourseProgress.deleteMany({ userId });
+    if (deleteRequest) {
+      await AdminRequest.deleteOne({ userId });
+    }
 
-    // Delete user purchases
+    await CourseProgress.deleteMany({ userId });
     await CoursePurchase.deleteMany({ userId });
 
-    // Remove user from enrolledStudents in all courses
     await Course.updateMany(
       { enrolledStudents: userId },
-      { $pull: { enrolledStudents: userId } } // $pull removes specific value from array
+      { $pull: { enrolledStudents: userId } }
     );
 
     if (user.photoUrl) {
       const urlParts = user.photoUrl.split("/");
-      const filename = urlParts[urlParts.length - 1];
+      const filename = urlParts.pop();
       const publicId = filename.split(".")[0];
       await deleteMediaFromCloudinary(`e-learning/image/${publicId}`);
     }
 
-    // Delete the user
     await User.findByIdAndDelete(userId);
 
     return res
       .status(200)
       .json({ success: true, message: "User deleted successfully" });
   } catch (error) {
-    console.log(error);
+    console.error("Error deleting user:", error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -80,6 +83,7 @@ export const getAllInstructor = async (req, res) => {
     const instructors = await User.find({ role: "instructor" }, "-password");
     res.status(200).json({ success: true, instructors });
   } catch (error) {
+    console.error("Error fetching instructors:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -87,61 +91,49 @@ export const getAllInstructor = async (req, res) => {
 export const deleteInstructor = async (req, res) => {
   try {
     const { userId } = req.body;
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User ID is required" });
+    }
 
-    // Check if user exists
     const user = await User.findById(userId);
     if (!user) {
       return res
         .status(404)
-        .json({ success: false, message: "User not found" });
+        .json({ success: false, message: "Instructor not found" });
     }
 
-    // Find all courses created by the instructor
     const courses = await Course.find({ creator: userId });
-
-    // Extract course IDs
     const courseIds = courses.map((course) => course._id);
-
-    // Extract all lecture IDs
     const lectureIds = courses.flatMap((course) => course.lectures);
-
-    // Find all lectures using extracted lecture IDs
     const lectures = await Lecture.find({ _id: { $in: lectureIds } });
 
-    // Delete videos from Cloudinary
     for (const lecture of lectures) {
       if (lecture.publicId) {
         await deleteVideoFromCloudinary(lecture.publicId);
       }
     }
 
-    // Delete all lectures
     await Lecture.deleteMany({ _id: { $in: lectureIds } });
-
-    // Delete related course progress & purchases
     await CourseProgress.deleteMany({ courseId: { $in: courseIds } });
     await CoursePurchase.deleteMany({ courseId: { $in: courseIds } });
 
-    // Remove these courses from students' enrolled lists
     await User.updateMany(
       { _id: { $in: courses.flatMap((course) => course.enrolledStudents) } },
       { $pull: { enrolledCourses: { $in: courseIds } } }
     );
 
-    // Delete coursethumbnail
     for (const course of courses) {
       if (course.courseThumbnail) {
         const urlParts = course.courseThumbnail.split("/");
-        const filename = urlParts[urlParts.length - 1]; // Get last part of URL
-        const publicId = filename.split(".")[0]; // Remove extension
+        const filename = urlParts.pop();
+        const publicId = filename.split(".")[0];
         await deleteMediaFromCloudinary(`e-learning/image/${publicId}`);
       }
     }
 
-    // Delete the courses
     await Course.deleteMany({ _id: { $in: courseIds } });
-
-    // Finally, delete the instructor
     await User.findByIdAndDelete(userId);
 
     return res.status(200).json({
@@ -149,25 +141,25 @@ export const deleteInstructor = async (req, res) => {
       message: "Instructor and related data deleted successfully",
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error deleting instructor:", error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };
 
 export const getInstructorCourses = async (req, res) => {
   try {
-    const instructorId = req.params.instructorId;
+    const { instructorId } = req.params;
 
     const instructor = await User.findById(instructorId);
-
-    if (instructor.role === "instructor") {
-      const instructorCourses = await Course.find({ creator: instructorId });
-
-      res.status(200).json({ success: true, instructorCourses });
-    } else {
-      res.status(400).json({ success: false, message: "Access denied" });
+    if (!instructor || instructor.role !== "instructor") {
+      return res.status(400).json({ success: false, message: "Access denied" });
     }
+
+    const instructorCourses = await Course.find({ creator: instructorId });
+
+    res.status(200).json({ success: true, instructorCourses });
   } catch (error) {
+    console.error("Error fetching instructor courses:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -175,9 +167,9 @@ export const getInstructorCourses = async (req, res) => {
 export const getAllAdminRequest = async (req, res) => {
   try {
     const request = await AdminRequest.find({}).populate("userId");
-
     res.status(200).json({ success: true, request });
   } catch (error) {
+    console.error("Error fetching admin requests:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -186,18 +178,14 @@ export const updateAdminRequest = async (req, res) => {
   try {
     const { userId, status, userRole } = req.body;
 
-    console.log(userId);
-
     if (!userId || !status) {
       return res
         .status(400)
         .json({ success: false, message: "User ID and status are required" });
     }
 
-    const objectId = new mongoose.Types.ObjectId(userId);
-
     const userRequest = await AdminRequest.findOneAndUpdate(
-      { userId: objectId },
+      { userId },
       { status },
       { new: true }
     );
@@ -222,7 +210,7 @@ export const updateAdminRequest = async (req, res) => {
       .status(200)
       .json({ success: true, message: "Status updated successfully" });
   } catch (error) {
-    console.error(error);
+    console.error("Error updating admin request:", error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -230,7 +218,6 @@ export const updateAdminRequest = async (req, res) => {
 export const deleteAdminRequest = async (req, res) => {
   try {
     const { id } = req.body;
-
     if (!id) {
       return res
         .status(400)
@@ -238,21 +225,23 @@ export const deleteAdminRequest = async (req, res) => {
     }
 
     const deleteRequest = await AdminRequest.findById(id);
-
     if (!deleteRequest) {
       return res
         .status(404)
         .json({ success: false, message: "Request not found" });
     }
 
-    await deletePdfFromCloudinary(deleteRequest.publicId);
+    if (deleteRequest.publicId) {
+      await deletePdfFromCloudinary(deleteRequest.publicId);
+    }
 
     await AdminRequest.findByIdAndDelete(id);
 
-    res
+    return res
       .status(200)
       .json({ success: true, message: "Admin request deleted successfully" });
   } catch (error) {
+    console.error("Error deleting admin request:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
