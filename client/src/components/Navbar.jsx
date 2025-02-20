@@ -193,7 +193,7 @@ const Navbar = () => {
                 </button>
                 <button
                   onClick={() => {
-                    navigate("/register");
+                    navigate("/login");
                   }}
                   className="px-4 py-2 bg-gray-200 text-gray-800 text-sm rounded-lg hover:bg-gray-300 cursor-pointer"
                 >
@@ -302,7 +302,7 @@ const Navbar = () => {
 
                 <button
                   onClick={() => {
-                    navigate("/register");
+                    navigate("/login");
                     toggleMobileMenu();
                   }}
                   className="px-4 py-2 bg-gray-200 text-gray-800 text-sm rounded-lg hover:bg-gray-300 cursor-pointer"
