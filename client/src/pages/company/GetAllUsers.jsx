@@ -50,7 +50,7 @@ const GetAllUsers = () => {
             <button
               onClick={() => deleteUserHandle(user._id)}
               className="absolute top-2 right-2 text-red-600 hover:text-red-800 cursor-pointer"
-              disabled={loadingUserId === user._id} // Disable only the clicked button
+              disabled={loadingUserId === user._id}
             >
               {loadingUserId === user._id ? <Loader /> : <FaTrash size={20} />}
             </button>

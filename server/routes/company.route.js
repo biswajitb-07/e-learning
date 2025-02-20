@@ -1,6 +1,7 @@
 import express from "express";
 import {
   deleteAdminRequest,
+  deleteInstructor,
   deleteUser,
   getAllAdminRequest,
   getAllInstructor,
@@ -15,6 +16,9 @@ const companyRouter = express.Router();
 companyRouter.route("/users").get(isAuthenticated, getAllUsers);
 companyRouter.route("/delete-user").delete(isAuthenticated, deleteUser);
 companyRouter.route("/instructors").get(isAuthenticated, getAllInstructor);
+companyRouter
+  .route("/delete-instructor")
+  .delete(isAuthenticated, deleteInstructor);
 companyRouter
   .route("/instructor/:instructorId/courses")
   .get(getInstructorCourses);

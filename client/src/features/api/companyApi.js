@@ -4,7 +4,7 @@ const COMPANY_API = "https://e-learning-sryx.onrender.com/api/v1/company";
 
 export const companyApi = createApi({
   reducerPath: "companyApi",
-  tagTypes: ["Refetch_User"],
+  tagTypes: ["Refetch_User", "Refetch_Instructor"],
   baseQuery: fetchBaseQuery({
     baseUrl: COMPANY_API,
     credentials: "include",
@@ -30,6 +30,15 @@ export const companyApi = createApi({
         url: "/instructors",
         method: "GET",
       }),
+      providesTags: ["Refetch_Instructor"],
+    }),
+    deleteInstructor: builder.mutation({
+      query: (userId) => ({
+        url: "delete-instructor",
+        method: "DELETE",
+        body: { userId },
+      }),
+      invalidatesTags: ["Refetch_Instructor"],
     }),
     getInstructorCourses: builder.query({
       query: (instructorId) => ({
@@ -49,6 +58,7 @@ export const companyApi = createApi({
         method: "PUT",
         body: { userId, status, userRole },
       }),
+      invalidatesTags: ["Refetch_Instructor"],
     }),
     deleteAdminRequest: builder.mutation({
       query: (id) => ({
@@ -64,6 +74,7 @@ export const {
   useGetAllUsersQuery,
   useDeleteUserMutation,
   useGetAllInstructorQuery,
+  useDeleteInstructorMutation,
   useGetInstructorCoursesQuery,
   useGetAllAdminRequestQuery,
   useUpdateAdminRequestMutation,

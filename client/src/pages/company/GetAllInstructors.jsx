@@ -1,10 +1,32 @@
-import React from "react";
-import { useGetAllInstructorQuery } from "../../features/api/companyApi";
+import React, { useState } from "react";
+import {
+  useDeleteInstructorMutation,
+  useGetAllInstructorQuery,
+} from "../../features/api/companyApi";
 import Loader from "../../components/UI/Loader";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { FaTrash } from "react-icons/fa";
 
 const GetAllinstructors = () => {
   const { data, isLoading, error } = useGetAllInstructorQuery();
+  const [deleteInstructor, { isSuccess }] = useDeleteInstructorMutation();
+  const [loadingUserId, setLoadingUserId] = useState(null);
+
+  const deleteInstructorHandle = async (userId) => {
+    setLoadingUserId(userId);
+    try {
+      await deleteInstructor(userId).unwrap();
+    } catch (err) {
+      toast.error("Failed to delete user");
+    } finally {
+      setLoadingUserId(null);
+    }
+  };
+
+  if (isSuccess) {
+    toast.success("Instructor delete successful");
+  }
 
   if (isLoading)
     return (
@@ -29,8 +51,24 @@ const GetAllinstructors = () => {
           <Link to={`/company/instructor/${user._id}/courses`}>
             <div
               key={user._id}
-              className="bg-white shadow-lg rounded-lg p-5 border cursor-pointer transition-all duration-150 ease-linear hover:scale-95 hover:shadow-green-400"
+              className="bg-white shadow-lg rounded-lg p-5 border transition-all duration-150 ease-linear hover:scale-95 hover:shadow-green-400"
             >
+              {/* Delete Icon */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteInstructorHandle(user._id);
+                }}
+                className="absolute top-2 right-2 text-red-600 hover:text-red-800 cursor-pointer"
+                disabled={loadingUserId === user._id}
+              >
+                {loadingUserId === user._id ? (
+                  <Loader />
+                ) : (
+                  <FaTrash size={20} />
+                )}
+              </button>
+
               {/* User Image */}
               {user.photoUrl && (
                 <img
@@ -52,6 +90,14 @@ const GetAllinstructors = () => {
           </Link>
         ))}
       </div>
+
+      {data.instructors.length === 0 && (
+        <div className="grid place-items-center">
+          <h1 className="text-red-500 font-bold text-2xl">
+            No Instructor found!
+          </h1>
+        </div>
+      )}
     </div>
   );
 };

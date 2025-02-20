@@ -7,8 +7,6 @@ const InstructorCourses = () => {
   const { instructorId } = useParams();
   const { data, isLoading, error } = useGetInstructorCoursesQuery(instructorId);
 
-  console.log(data);
-
   if (isLoading)
     return (
       <div className="h-screen w-full flex items-center justify-center">
@@ -74,16 +72,18 @@ const InstructorCourses = () => {
               {/* Enrolled Students Count */}
               <p className="text-sm text-gray-600 text-center font-bold">
                 Enrolled Students:{" "}
-                <strong className="text-blue-500">{course.enrolledStudents?.length || 0}</strong>
+                <strong className="text-blue-500">
+                  {course.enrolledStudents?.length || 0}
+                </strong>
               </p>
             </div>
           </div>
         ))}
       </div>
 
-      {data.instructorCourses?.length === 0 && (
+      {data?.instructorCourses?.length === 0 && (
         <div className="grid place-items-center">
-            <h1 className="text-red-500 font-bold text-2xl">No course found!</h1>
+          <h1 className="text-red-500 font-bold text-2xl">No course found!</h1>
         </div>
       )}
     </div>
