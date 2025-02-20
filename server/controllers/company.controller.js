@@ -40,7 +40,9 @@ export const deleteUser = async (req, res) => {
 
     const deleteRequest = await AdminRequest.findOne({ userId });
 
-    await deletePdfFromCloudinary(deleteRequest.publicId);
+    if (deleteRequest.publicId) {
+      await deletePdfFromCloudinary(deleteRequest.publicId);
+    }
 
     await AdminRequest.deleteOne({ userId });
     await CourseProgress.deleteMany({ userId });
