@@ -1,9 +1,28 @@
-import React from "react";
-import { useGetAllUsersQuery } from "../../features/api/companyApi";
+import React, { useState } from "react";
+import { FaTrash } from "react-icons/fa";
+import {
+  useDeleteUserMutation,
+  useGetAllUsersQuery,
+} from "../../features/api/companyApi";
 import Loader from "../../components/UI/Loader";
+import { toast } from "react-toastify";
 
 const GetAllUsers = () => {
   const { data, isLoading, error } = useGetAllUsersQuery();
+  const [deleteUser] = useDeleteUserMutation();
+  const [loadingUserId, setLoadingUserId] = useState(null);
+
+  const deleteUserHandle = async (userId) => {
+    setLoadingUserId(userId);
+    try {
+      await deleteUser(userId).unwrap();
+      toast.success("User deleted successfully");
+    } catch (err) {
+      toast.error("Failed to delete user");
+    } finally {
+      setLoadingUserId(null);
+    }
+  };
 
   if (isLoading)
     return (
@@ -21,12 +40,21 @@ const GetAllUsers = () => {
     <div className="container mx-auto my-10 p-5">
       <h1 className="text-2xl font-bold mb-6 text-center">User List</h1>
 
-      <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-6 ">
+      <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-6">
         {data?.users?.map((user) => (
           <div
             key={user._id}
-            className="bg-white shadow-lg rounded-lg p-5 border cursor-pointer transition-all duration-150 ease-linear hover:scale-95 hover:shadow-green-400"
+            className="bg-white shadow-lg rounded-lg p-5 border transition-all duration-150 ease-linear hover:scale-95 hover:shadow-green-400 relative"
           >
+            {/* Delete Icon */}
+            <button
+              onClick={() => deleteUserHandle(user._id)}
+              className="absolute top-2 right-2 text-red-600 hover:text-red-800 cursor-pointer"
+              disabled={loadingUserId === user._id} // Disable only the clicked button
+            >
+              {loadingUserId === user._id ? <Loader /> : <FaTrash size={20} />}
+            </button>
+
             {/* User Image */}
             {user.photoUrl && (
               <img
@@ -39,9 +67,7 @@ const GetAllUsers = () => {
             {/* User Info */}
             <h2 className="text-xl font-semibold text-center">{user.name}</h2>
             <p className="text-gray-600 text-center">{user.email}</p>
-            <span
-              className={`block text-center text-sm text-white px-3 py-1 rounded-full w-fit mx-auto my-2 bg-green-600`}
-            >
+            <span className="block text-center text-sm text-white px-3 py-1 rounded-full w-fit mx-auto my-2 bg-green-600">
               {user.role}
             </span>
 

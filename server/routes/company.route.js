@@ -1,6 +1,7 @@
 import express from "express";
 import {
   deleteAdminRequest,
+  deleteUser,
   getAllAdminRequest,
   getAllInstructor,
   getAllUsers,
@@ -12,6 +13,7 @@ import isAuthenticated from "../middlewares/isAuthenticated.js";
 const companyRouter = express.Router();
 
 companyRouter.route("/users").get(isAuthenticated, getAllUsers);
+companyRouter.route("/delete-user").delete(isAuthenticated, deleteUser);
 companyRouter.route("/instructors").get(isAuthenticated, getAllInstructor);
 companyRouter
   .route("/instructor/:instructorId/courses")
