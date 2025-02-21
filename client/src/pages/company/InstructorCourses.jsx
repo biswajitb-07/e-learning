@@ -51,7 +51,7 @@ const InstructorCourses = () => {
         {data?.instructorCourses?.map((course) => (
           <div
             key={course._id}
-            className="bg-white shadow-md rounded-lg overflow-hidden border transition-all ease-linear duration-150  hover:scale-95 hover:shadow-green-400 cursor-pointer"
+            className="relative bg-white shadow-md rounded-lg overflow-hidden border transition-all ease-linear duration-150  hover:scale-95 hover:shadow-green-400 cursor-pointer"
           >
             {/* Delete Icon */}
             <button

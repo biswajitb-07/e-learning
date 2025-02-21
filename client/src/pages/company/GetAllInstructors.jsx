@@ -53,7 +53,7 @@ const GetAllinstructors = () => {
           <Link to={`/company/instructor/${user._id}/courses`}>
             <div
               key={user._id}
-              className="bg-white shadow-lg rounded-lg p-5 border transition-all duration-150 ease-linear hover:scale-95 hover:shadow-green-400"
+              className="relative bg-white shadow-lg rounded-lg p-5 border transition-all duration-150 ease-linear hover:scale-95 hover:shadow-green-400"
             >
               {/* Delete Icon */}
               <button
