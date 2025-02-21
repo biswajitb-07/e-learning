@@ -24,9 +24,11 @@ const GetAllinstructors = () => {
     }
   };
 
-  if (isSuccess) {
-    toast.success("Instructor delete successful");
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Instructor delete successful");
+    }
+  }, [isSuccess]);
 
   if (isLoading)
     return (
@@ -56,6 +58,7 @@ const GetAllinstructors = () => {
               {/* Delete Icon */}
               <button
                 onClick={(e) => {
+                  e.preventDefault();
                   e.stopPropagation();
                   deleteInstructorHandle(user._id);
                 }}
