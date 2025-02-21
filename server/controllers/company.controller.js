@@ -164,6 +164,69 @@ export const getInstructorCourses = async (req, res) => {
   }
 };
 
+export const deleteInstructorCourse = async (req, res) => {
+  try {
+    const { courseId } = req.body;
+
+    if (!courseId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Course ID is required" });
+    }
+
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found" });
+    }
+
+    // Extract all lecture IDs
+    const lectureIds = course.lectures;
+
+    // Find all lectures
+    const lectures = await Lecture.find({ _id: { $in: lectureIds } });
+
+    // Delete videos from Cloudinary
+    for (const lecture of lectures) {
+      if (lecture.publicId) {
+        await deleteVideoFromCloudinary(lecture.publicId);
+      }
+    }
+
+    // Delete all lectures
+    await Lecture.deleteMany({ _id: { $in: lectureIds } });
+
+    // Remove course from students' enrolledCourses
+    await User.updateMany(
+      { _id: { $in: course.enrolledStudents } },
+      { $pull: { enrolledCourses: courseId } }
+    );
+
+    // Delete related course progress & purchases
+    await CourseProgress.deleteMany({ courseId });
+    await CoursePurchase.deleteMany({ courseId });
+
+    // Delete course thumbnail from Cloudinary
+    if (course.courseThumbnail) {
+      const urlParts = course.courseThumbnail.split("/");
+      const filename = urlParts.pop();
+      const publicId = filename.split(".")[0];
+      await deleteMediaFromCloudinary(`e-learning/image/${publicId}`);
+    }
+
+    // Delete the course
+    await Course.findByIdAndDelete(courseId);
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Course deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting course:", error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 export const getAllAdminRequest = async (req, res) => {
   try {
     const request = await AdminRequest.find({}).populate("userId");

@@ -2,6 +2,7 @@ import express from "express";
 import {
   deleteAdminRequest,
   deleteInstructor,
+  deleteInstructorCourse,
   deleteUser,
   getAllAdminRequest,
   getAllInstructor,
@@ -21,7 +22,10 @@ companyRouter
   .delete(isAuthenticated, deleteInstructor);
 companyRouter
   .route("/instructor/:instructorId/courses")
-  .get(getInstructorCourses);
+  .get(isAuthenticated, getInstructorCourses);
+companyRouter
+  .route("/delete-instructor-course")
+  .delete(isAuthenticated, deleteInstructorCourse);
 companyRouter.route("/request").get(isAuthenticated, getAllAdminRequest);
 companyRouter.route("/update-request").put(isAuthenticated, updateAdminRequest);
 companyRouter

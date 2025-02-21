@@ -48,7 +48,11 @@ const GetAllUsers = () => {
           >
             {/* Delete Icon */}
             <button
-              onClick={() => deleteUserHandle(user._id)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                deleteUserHandle(user._id);
+              }}
               className="absolute top-2 right-2 text-red-600 hover:text-red-800 cursor-pointer"
               disabled={loadingUserId === user._id}
             >

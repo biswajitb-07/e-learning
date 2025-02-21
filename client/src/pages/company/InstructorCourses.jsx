@@ -1,11 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useGetInstructorCoursesQuery } from "../../features/api/companyApi";
+import {
+  useDeleteInstructorCourseMutation,
+  useGetInstructorCoursesQuery,
+} from "../../features/api/companyApi";
 import Loader from "../../components/UI/Loader";
+import { toast } from "react-toastify";
+import { FaTrash } from "react-icons/fa";
 
 const InstructorCourses = () => {
   const { instructorId } = useParams();
   const { data, isLoading, error } = useGetInstructorCoursesQuery(instructorId);
+  const [loadingCourseId, setLoadingCourseId] = useState(null);
+
+  const [deleteInstructorCourse] = useDeleteInstructorCourseMutation();
+
+  const deleteCourseHandle = async (courseId) => {
+    setLoadingCourseId(courseId);
+    try {
+      await deleteInstructorCourse(courseId).unwrap();
+      toast.success("Course deleted successfully");
+    } catch (err) {
+      toast.error("Failed to course user");
+    } finally {
+      setLoadingCourseId(null);
+    }
+  };
 
   if (isLoading)
     return (
@@ -33,6 +53,23 @@ const InstructorCourses = () => {
             key={course._id}
             className="bg-white shadow-md rounded-lg overflow-hidden border transition-all ease-linear duration-150  hover:scale-95 hover:shadow-green-400 cursor-pointer"
           >
+            {/* Delete Icon */}
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                deleteCourseHandle(course._id);
+              }}
+              className="absolute bottom-2 right-2 text-red-600 hover:text-red-800 cursor-pointer"
+              disabled={loadingCourseId === course._id}
+            >
+              {loadingCourseId === course._id ? (
+                <Loader />
+              ) : (
+                <FaTrash size={20} />
+              )}
+            </button>
+
             {/* Course Image */}
             {course.courseThumbnail && (
               <img
