@@ -31,6 +31,10 @@ const CourseTab = () => {
     refetch,
   } = useGetCourseByIdQuery(courseId);
 
+  useEffect(() => {
+    refetch();
+  }, []);
+
   const [publishCourse] = usePublishCourseMutation();
   const [editCourse, { data, isLoading, isSuccess, error }] =
     useEditCourseMutation();
