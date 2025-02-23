@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { MdClose, MdMenu } from "react-icons/md";
-import { FaRegUser } from "react-icons/fa6";
+import { FaBook, FaRegUser } from "react-icons/fa6";
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { VscGitPullRequestGoToChanges } from "react-icons/vsc";
 
@@ -36,6 +36,17 @@ const CompanySidebar = () => {
           >
             <FaChalkboardTeacher size={19} className="text-current" />
             <h1 className="text-lg font-medium">Instructors</h1>
+          </Link>
+          <Link
+            to="instructors/courses"
+            className={`flex items-center gap-2 text-gray-700 hover:text-green-500 ${
+              isActive("/company/instructors/courses")
+                ? "text-green-500"
+                : "text-white"
+            }`}
+          >
+            <FaBook size={19} className="text-current" />
+            <h1 className="text-lg font-medium">Courses</h1>
           </Link>
           <Link
             to="admin-request"
@@ -98,6 +109,18 @@ const CompanySidebar = () => {
           >
             <FaChalkboardTeacher size={19} className="text-current" />
             <h1 className="text-lg font-medium">Instructors</h1>
+          </Link>
+          <Link
+            onClick={toggleMobileMenu}
+            to="instructors/courses"
+            className={`flex items-center gap-2 text-gray-700 hover:text-green-500 ${
+              isActive("/company/instructors/courses")
+                ? "text-green-500"
+                : "text-white"
+            }`}
+          >
+            <FaBook size={19} className="text-current" />
+            <h1 className="text-lg font-medium">Courses</h1>
           </Link>
           <Link
             onClick={toggleMobileMenu}

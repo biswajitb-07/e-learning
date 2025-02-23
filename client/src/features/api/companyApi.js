@@ -40,6 +40,13 @@ export const companyApi = createApi({
       }),
       invalidatesTags: ["Refetch_Instructor"],
     }),
+    getAllCourses: builder.query({
+      query: () => ({
+        url: "/courses",
+        method: "GET",
+      }),
+      providesTags: ["Refetch_Instructor_Course"],
+    }),
     getInstructorCourses: builder.query({
       query: (instructorId) => ({
         url: `/instructor/${instructorId}/courses`,
@@ -84,6 +91,7 @@ export const {
   useDeleteUserMutation,
   useGetAllInstructorQuery,
   useDeleteInstructorMutation,
+  useGetAllCoursesQuery,
   useGetInstructorCoursesQuery,
   useDeleteInstructorCourseMutation,
   useGetAllAdminRequestQuery,

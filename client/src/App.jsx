@@ -29,6 +29,7 @@ import AdminRequest from "./pages/student/AdminRequest";
 import CompanySidebar from "./pages/company/CompanySidebar";
 import GetAllUsers from "./pages/company/GetAllUsers";
 import GetAllInstructors from "./pages/company/GetAllInstructors";
+import GetAllCourses from "./pages/company/GetAllCourses";
 import InstructorCourses from "./pages/company/InstructorCourses";
 import GetAllAdminRequest from "./pages/company/GetAllAdminRequest";
 
@@ -159,6 +160,10 @@ const appRouter = createBrowserRouter([
           {
             path: "instructors",
             element: <GetAllInstructors />,
+          },
+          {
+            path: "instructors/courses",
+            element: <GetAllCourses />,
           },
           {
             path: "instructor/:instructorId/courses",

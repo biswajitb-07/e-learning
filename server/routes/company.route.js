@@ -5,6 +5,7 @@ import {
   deleteInstructorCourse,
   deleteUser,
   getAllAdminRequest,
+  getAllCourses,
   getAllInstructor,
   getAllUsers,
   getInstructorCourses,
@@ -20,6 +21,7 @@ companyRouter.route("/instructors").get(isAuthenticated, getAllInstructor);
 companyRouter
   .route("/delete-instructor")
   .delete(isAuthenticated, deleteInstructor);
+companyRouter.route("/courses").get(isAuthenticated, getAllCourses);
 companyRouter
   .route("/instructor/:instructorId/courses")
   .get(isAuthenticated, getInstructorCourses);
