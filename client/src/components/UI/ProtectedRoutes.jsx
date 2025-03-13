@@ -34,3 +34,17 @@ export const AdminRoute = ({ children }) => {
 
   return children;
 };
+
+export const CompanyRoute = ({ children }) => {
+  const { user, isAuthenticated } = useSelector((store) => store.auth);
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+
+  if (user?.role !== "company") {
+    return <Navigate to="/" />;
+  }
+
+  return children;
+};

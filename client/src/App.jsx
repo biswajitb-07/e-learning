@@ -21,6 +21,7 @@ import SearchPage from "./pages/student/SearchPage";
 import {
   AdminRoute,
   AuthenticatedUser,
+  CompanyRoute,
   ProtectedRoute,
 } from "./components/UI/ProtectedRoutes";
 import PurchaseCourseProtectedRoute from "./components/UI/PurchaseCourseProtectedRoute";
@@ -148,9 +149,9 @@ const appRouter = createBrowserRouter([
       {
         path: "company",
         element: (
-          <>
+          <CompanyRoute>
             <CompanySidebar />
-          </>
+          </CompanyRoute>
         ),
         children: [
           {
