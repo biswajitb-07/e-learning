@@ -44,7 +44,7 @@ export const createCheckoutSession = async (req, res) => {
       orderId: order.id,
       amount: order.amount,
       currency: order.currency,
-      key: process.env.RAZORPAY_PUBLISHABLE_KEY,
+      key: process.env.RAZORPAY_KEY_ID,
       courseTitle: course.courseTitle,
       courseThumbnail: course.courseThumbnail,
       success_url: `${process.env.FRONTEND_URL}/course-progress/${courseId}`,
